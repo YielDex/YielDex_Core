@@ -3,8 +3,9 @@
 src = "src"
 out = "out"
 libs = ["lib"]
-solc = "0.8.10" # to use a specific local solc install set the path as `solc = "<path to solc>/solc"`
+solc = "0.8.19" # to use a specific local solc install set the path as `solc = "<path to solc>/solc"`
 eth-rpc-url = "https://mainnet.infura.io"
+remappings = ["@gelato/=lib/ops/contracts"]
 
 ## set only when the `hardhat` profile is selected
 [profile.hardhat]
