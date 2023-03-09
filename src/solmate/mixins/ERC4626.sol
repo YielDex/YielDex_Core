@@ -12,7 +12,7 @@ abstract contract ERC4626 is ERC20 {
     using FixedPointMathLib for uint256;
 
     /*//////////////////////////////////////////////////////////////
-                                 EVENTS
+                                EVENTS
     //////////////////////////////////////////////////////////////*/
 
     event Deposit(address indexed caller, address indexed owner, uint256 assets, uint256 shares);
