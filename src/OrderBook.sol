@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
-import "./gelato/Types.sol";
-import "./OrderExecutor.sol";
-import "./gelato/OpsTaskCreator.sol";
-import './LendingVault.sol';
+import {OpsTaskCreator} from "@gelato/integrations/OpsTaskCreator.sol";
+import {ModuleData, Module} from "@gelato/integrations/Types.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {OrderExecutor} from "./OrderExecutor.sol";
+import {LendingVault} from './LendingVault.sol';
 
 struct OrderDatas {
     address user;

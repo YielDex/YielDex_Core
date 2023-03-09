@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
-import "@gelato/vendor/gelato/OpsReady.sol";
-import "./OrderBook.sol";
-import './LendingVault.sol';
-import "./uniswap/ISwapRouter.sol";
+import {OpsReady} from "@gelato/integrations/OpsReady.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {OrderBook} from "./OrderBook.sol";
+import {LendingVault} from './LendingVault.sol';
+import {ISwapRouter} from "./uniswap/ISwapRouter.sol";
 
 contract OrderExecutor is OpsReady {
 

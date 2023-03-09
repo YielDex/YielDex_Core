@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import "./yield-daddy/aave-v3/AaveV3ERC4626Factory.sol";
 import "./yield-daddy/aave-v3/IPoolAddressesProvider.sol";
-import "./OrderBook.sol";
+import {OrderBook} from "./OrderBook.sol";
 
 contract LendingVault {
 
