@@ -9,4 +9,4 @@
 [submodule "lib/ops"]
 	path = lib/ops
 	url = https://github.com/gelatodigital/ops
-	branch = 2.0.0
+	branch = master
