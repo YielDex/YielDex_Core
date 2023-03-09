@@ -10,3 +10,6 @@
 	path = lib/ops
 	url = https://github.com/gelatodigital/ops
 	branch = master
+[submodule "lib/solmate"]
+	path = lib/solmate
+	url = https://github.com/transmissions11/solmate
