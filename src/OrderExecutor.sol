@@ -3,9 +3,9 @@ pragma solidity ^0.8.19;
 
 import {OpsReady} from "@gelato/integrations/OpsReady.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {ISwapRouter} from "@v3-periphery/interfaces/ISwapRouter.sol";
 import {OrderBook} from "./OrderBook.sol";
 import {LendingVault} from './LendingVault.sol';
-import {ISwapRouter} from "./uniswap/ISwapRouter.sol";
 
 contract OrderExecutor is OpsReady {
 

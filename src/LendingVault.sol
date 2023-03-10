@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
-import "./yield-daddy/aave-v3/AaveV3ERC4626Factory.sol";
-import "./yield-daddy/aave-v3/IPoolAddressesProvider.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {ERC4626} from "@solmate/mixins/ERC4626.sol";
+import {AaveV3ERC4626Factory} from "@yield-daddy/src/aave-v3/AaveV3ERC4626Factory.sol";
+import {IPoolAddressesProvider} from "@aave-v3-core/contracts/interfaces/IPoolAddressesProvider.sol";
+import {IPool} from "@yield-daddy/src/aave-v3/external/IPool.sol";
+import {IRewardsController} from "@yield-daddy/src/aave-v3/external/IRewardsController.sol";
 import {OrderBook} from "./OrderBook.sol";
 
 contract LendingVault {
@@ -23,7 +27,8 @@ contract LendingVault {
         orderBookAddress = _orderBookAddress;
         aavePoolAddressesProvider = IPoolAddressesProvider(_iPoolAddressesProviderAddress);
         aavePool = IPool(aavePoolAddressesProvider.getPool());
-        aaveFactory = new AaveV3ERC4626Factory(aavePool);
+        //rewardsController = IRewardsController(aavePoolAddressesProvider.getRewardsController());
+        aaveFactory = new AaveV3ERC4626Factory(aavePool, address(0x0), IRewardsController(address(0x0)));
 
         // testAsset that we want to include from from start
         ERC20 usdcERC20 = ERC20(_temporaryTokenAddress);
