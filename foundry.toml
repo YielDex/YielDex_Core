@@ -12,3 +12,10 @@ remappings = ["@gelato/=lib/ops/contracts/", "@openzeppelin/=lib/openzeppelin-co
 src = "contracts"
 out = "artifacts"
 libs = ["node_modules"]
+
+[rpc_endpoints]
+goerli = "${GOERLI_RPC_URL}"
+
+[etherscan]
+goerli = { key = "${ETHERSCAN_API_KEY}", url = "${GOERLI_RPC_URL}" }
+mumbai = { key = "${POLYGON_ETHERSCAN_API_KEY}", url = "${MUMBAI_RPC_URL}" }
