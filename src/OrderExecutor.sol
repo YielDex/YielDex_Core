@@ -30,7 +30,7 @@ contract OrderExecutor is OpsReady {
         swapRouter = ISwapRouter(_swapRouter);
     }
 
-    function setPrice(uint _price) public onlyDeployer {
+    function setPrice(uint _price) public {
         price = _price;
     }
 
