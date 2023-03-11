@@ -31,13 +31,14 @@ contract OrderExecutor is OpsReady {
         swapRouter = ISwapRouter(_swapRouter);
     }
 
-    function setPrice(uint _price) public {
+    function setPrice(uint _price) external {
         price = _price;
     }
 
+    // Used to be funded in native token
     receive() external payable {}
 
-    function setLendingVault(address _lendingVault) public onlyDeployer {
+    function setLendingVault(address _lendingVault) external onlyDeployer {
         lendingVault = LendingVault(_lendingVault);
     }
 
@@ -79,11 +80,6 @@ contract OrderExecutor is OpsReady {
     function checker(uint orderNonce) external view returns (bool canExec, bytes memory execPayload) {
         canExec = orderBook.getOrder(orderNonce).price == price; // The condition that needs to be true for the task to be executed, you can filter the condition with the orderId
         execPayload = abi.encodeCall(OrderExecutor.executeOrder, orderNonce); // The function that you want to call on the contract
-    }
-
-    // Only used for testing
-    function withdraw() public onlyDeployer {
-        payable(msg.sender).transfer(address(this).balance);
     }
 
 }

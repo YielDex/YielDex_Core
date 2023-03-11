@@ -119,6 +119,9 @@ contract YielDex is Test {
         // Check that the order is executed
         assertTrue(orderBook.getOrder(orderNonce).isExecuted);
         assertGe(wethBalanceAfterOrderExecuted, wethBalanceBeforeOrderExecuted);
+
+        console.logString("WETH balance got with order execution");
+        console.logUint((wethBalanceAfterOrderExecuted-wethBalanceBeforeOrderExecuted)/(10**18)); // Human can verify that the amount is correct
     }
 
     /*

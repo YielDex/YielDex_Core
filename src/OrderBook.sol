@@ -36,11 +36,11 @@ contract OrderBook is OpsTaskCreator {
         admin = msg.sender;
     }
 
-    function setOrderExecutor(OrderExecutor _orderExecutorAddress) public onlyAdmin {
+    function setOrderExecutor(OrderExecutor _orderExecutorAddress) external onlyAdmin {
         orderExecutor = _orderExecutorAddress;
     }
 
-    function setLendingVault(address _lendingVaultAddress) public onlyAdmin {
+    function setLendingVault(address _lendingVaultAddress) external onlyAdmin {
         lendingVault = LendingVault(_lendingVaultAddress);
     } 
 
@@ -99,11 +99,11 @@ contract OrderBook is OpsTaskCreator {
         orders[_orderNonce].isExecuted = true;
     }
 
-    function getOrder(uint _orderNonce) public view returns (OrderDatas memory) {
+    function getOrder(uint _orderNonce) external view returns (OrderDatas memory) {
         return orders[_orderNonce];
     }
 
-    function getExecutorAddress() public view returns (address) {
+    function getExecutorAddress() external view returns (address) {
         return address(orderExecutor);
     }
 
