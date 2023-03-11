@@ -31,8 +31,8 @@ contract LendingVault {
         aaveFactory = new AaveV3ERC4626Factory(aavePool, address(0x0), IRewardsController(address(0x0)));
 
         // testAsset that we want to include from from start
-        ERC20 usdcERC20 = ERC20(_temporaryTokenAddress);
-        erc4626s[usdcERC20] = aaveFactory.createERC4626(usdcERC20);
+        ERC20 underleyingAsset = ERC20(_temporaryTokenAddress);
+        erc4626s[underleyingAsset] = aaveFactory.createERC4626(underleyingAsset);
     }
 
     function deposit(address tokenAddress, uint256 _amount, uint256 orderNonce) external {
