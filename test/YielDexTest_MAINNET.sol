@@ -9,6 +9,7 @@ import {IPool} from "@yield-daddy/src/aave-v3/external/IPool.sol";
 import {AaveV3ERC4626Factory} from "@yield-daddy/src/aave-v3/AaveV3ERC4626Factory.sol";
 import {IRewardsController} from "@yield-daddy/src/aave-v3/external/IRewardsController.sol";
 import {ISwapRouter} from "@v3-periphery/interfaces/ISwapRouter.sol";
+import {IOpsProxyFactory} from "@gelato/integrations/Types.sol";
 import {ERC20} from "@solmate/tokens/ERC20.sol";
 import {ERC4626} from "@solmate/mixins/ERC4626.sol";
 
@@ -17,7 +18,7 @@ import {OrderExecutor} from "../src/OrderExecutor.sol";
 import {LendingVault} from "../src/LendingVault.sol";
 
 
-contract CreateOrderTest is Test {
+contract YielDex is Test {
 
     // Main contracts
     OrderBook orderBook;
@@ -67,7 +68,6 @@ contract CreateOrderTest is Test {
     }
 
     function test_CreateUSDCToWETHOrder() public {
-
         ERC4626CreationForCompatibleAsset(vm.envAddress("USDC_MAINNET"));
 
         // Give 100000 usdc to the address that is gonna pass an order
@@ -85,6 +85,40 @@ contract CreateOrderTest is Test {
 
         // Check that the order is not executed
         assertFalse(orderBook.getOrder(orderNonce).isExecuted);
+    }
+
+    function test_triggerOrders() public {
+        // Recreate the order
+        test_CreateUSDCToWETHOrder();
+
+        // Fund the OrderExecutor with some eth
+        hoax(address(orderExecutor), 1000000000000000000000);
+
+        // Trigger the order condition
+        orderExecutor.setPrice(123);
+
+        // Get the address of the gelato executor
+        address dedicatedMsgSender;
+        address OPS_PROXY_FACTORY = 0xC815dB16D4be6ddf2685C201937905aBf338F5D7;
+        (dedicatedMsgSender, ) = IOpsProxyFactory(OPS_PROXY_FACTORY).getProxyOf(
+            address(orderBook)
+        );
+
+        // Get the balance of WETH before the order is executed
+        uint256 wethBalanceBeforeOrderExecuted = ERC20(vm.envAddress("WETH_MAINNET")).balanceOf(address(this));
+
+        // We are now impersonating the address of the gelato executor
+        vm.startPrank(dedicatedMsgSender);
+        // Trigger the order
+        orderExecutor.executeOrder(orderNonce);
+        vm.stopPrank();
+
+        // Get the balance of WETH after the order is executed
+        uint256 wethBalanceAfterOrderExecuted = ERC20(vm.envAddress("WETH_MAINNET")).balanceOf(address(this));
+
+        // Check that the order is executed
+        assertTrue(orderBook.getOrder(orderNonce).isExecuted);
+        assertGe(wethBalanceAfterOrderExecuted, wethBalanceBeforeOrderExecuted);
     }
 
     /*

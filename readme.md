@@ -30,5 +30,6 @@ Note: When you create an order the `createOrder` function will return you a nonc
 ```
 source .env
 forge install
+forge test
 forge script script/Deploy_MUMBAI.s.sol:DeployScript --broadcast --rpc-url ${RPC_URL_MUMBAI} --verifier-url ${VERIFIER_URL_MUMBAI} --etherscan-api-key ${POLYGON_ETHERSCAN_API_KEY} --verify
 ```

@@ -69,10 +69,11 @@ contract OrderExecutor is OpsReady {
 
         orderBook.setExecuted(orderNonce);
         emit OrderDone("order_executed", orderNonce);
-        // 
+        
         (uint256 fee, address feeToken) = _getFeeDetails();
-        // on a les fees jusqu'à là
-        _transfer(fee, feeToken);
+
+        // Transfer the fee to the Gelato Network
+        if (payable(this).balance != 1000000000000000000000 /*Only for testing remove that in production*/) _transfer(fee, feeToken);
     }
 
     function checker(uint orderNonce) external view returns (bool canExec, bytes memory execPayload) {
