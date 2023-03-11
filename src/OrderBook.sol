@@ -87,7 +87,7 @@ contract OrderBook is OpsTaskCreator {
 
         emit orderCreated("orderNonce", orderNonce);
 
-        return orderNonce; // return the order nonce
+        return orderNonce - 1; // return the order nonce
     }
 
     function cancelOrder(uint _orderNonce) external onlyAdmin {

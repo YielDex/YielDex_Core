@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.19;
 
-import {Test} from "@forge-std/Test.sol";
+import {Test, console, console2} from "@forge-std/Test.sol";
 
 import {IPoolAddressesProvider} from "@aave-v3-core/contracts/interfaces/IPoolAddressesProvider.sol";
 import {IPool} from "@yield-daddy/src/aave-v3/external/IPool.sol";
@@ -71,31 +71,25 @@ contract CreateOrderTest is Test {
         ERC4626CreationForCompatibleAsset(vm.envAddress("USDC_MAINNET"));
 
         // Give 100000 usdc to the address that is gonna pass an order
-        deal(vm.envAddress("USDC_MAINNET"), msg.sender, 100000000000, true);
-        require(ERC20(vm.envAddress("USDC_MAINNET")).balanceOf(msg.sender) == 100000000000, "Not enough USDC");
+        deal(vm.envAddress("USDC_MAINNET"), address(this), 100000000000, true);
+        require(ERC20(vm.envAddress("USDC_MAINNET")).balanceOf(address(this)) == 100000000000, "Not enough USDC");
 
         // Approve the orderbook to spend the 100000 usdc
         ERC20(vm.envAddress("USDC_MAINNET")).approve(address(orderBook), 100000000000);
 
         // Create an order
-        orderNonce = orderBook.createOrder(123, 1, underleyingAssetVault, vm.envAddress("WETH_MAINNET"));
+        orderNonce = orderBook.createOrder(123, 100000000000, underleyingAssetVault, vm.envAddress("WETH_MAINNET"));
 
         // Check if the order is created
-        //assertEq(orderBook.getOrder(orderNonce).user, msg.sender, "Order is not created");
+        assertEq(orderBook.getOrder(orderNonce).user, address(this), "Order is not created");
+
+        // Check that the order is not executed
+        assertFalse(orderBook.getOrder(orderNonce).isExecuted);
     }
 
-    function testFail_OrderNotPassed() internal {
-        // Check if the order is passed
-        assertEq(orderBook.getOrder(orderNonce).isExecuted, true, "Order is not passed");
-    }
-/*
-    function testFail_Subtract43() public {
-        testNumber = 43;
-        assertEq(testNumber, 42);
-    }
-
-    function test_orderCreation() public {
-        
+    /*
+    function testFail_OrderNotPassed() public {
     }
     */
+
 }
