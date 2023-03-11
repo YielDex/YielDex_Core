@@ -4,7 +4,7 @@ src = "src"
 out = "out"
 libs = ["lib"]
 solc = "0.8.19" # to use a specific local solc install set the path as `solc = "<path to solc>/solc"`
-eth-rpc-url = "https://mainnet.infura.io"
+eth-rpc-url = "https://rpc.ankr.com/eth"
 remappings = ["@forge-std/=lib/forge-std/src/", "@gelato/=lib/ops/contracts/", "@openzeppelin/=lib/openzeppelin-contracts/", "@solmate/=lib/solmate/src/", "@v3-periphery/=lib/v3-periphery/contracts/", "@uniswap/=lib/", "@yield-daddy/=lib/yield-daddy/", "@aave-v3-core/=lib/aave-v3-core/", "@aave/core-v3/=lib/aave-v3-core/", "@aave-v3-periphery/=lib/aave-v3-periphery/contracts/"]
 
 ## set only when the `hardhat` profile is selected

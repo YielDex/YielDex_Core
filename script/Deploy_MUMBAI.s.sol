@@ -23,7 +23,7 @@ contract DeployScript is Script {
         orderBook.setOrderExecutor(orderExecutor);
 
         // Deploy LendingVault
-        LendingVault lendingVault = new LendingVault(orderBook);
+        LendingVault lendingVault = new LendingVault(address(orderBook));
 
         // Set OrderBook's lendingVault
         orderBook.setLendingVault(address(lendingVault));

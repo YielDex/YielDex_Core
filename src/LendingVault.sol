@@ -16,8 +16,8 @@ contract LendingVault {
     // One order nonce gives you -> one amount of shares
     mapping(uint256 => uint256) public orderShares;
 
-    constructor(OrderBook _orderBook) {
-        orderBook = _orderBook;
+    constructor(address _orderBook) {
+        orderBook = OrderBook(_orderBook);
     }
 
     function deposit(uint256 orderNonce) external {
