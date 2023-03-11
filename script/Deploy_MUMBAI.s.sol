@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
-import "forge-std/Script.sol";
+import {Script} from "@forge-std/Script.sol";
 import {OrderBook} from "../src/OrderBook.sol";
 import {OrderExecutor} from "../src/OrderExecutor.sol";
 import {LendingVault} from "../src/LendingVault.sol";
@@ -23,7 +23,7 @@ contract DeployScript is Script {
         orderBook.setOrderExecutor(orderExecutor);
 
         // Deploy LendingVault
-        LendingVault lendingVault = new LendingVault(vm.envAddress("IPoolAddressesProvider_MUMBAI"), vm.envAddress("USDC_MUMBAI"), address(orderBook));
+        LendingVault lendingVault = new LendingVault(orderBook);
 
         // Set OrderBook's lendingVault
         orderBook.setLendingVault(address(lendingVault));

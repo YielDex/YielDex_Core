@@ -3,6 +3,7 @@ pragma solidity ^0.8.19;
 
 import {OpsReady} from "@gelato/integrations/OpsReady.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {ERC4626} from "@solmate/mixins/ERC4626.sol";
 import {ISwapRouter} from "@v3-periphery/interfaces/ISwapRouter.sol";
 import {OrderBook} from "./OrderBook.sol";
 import {LendingVault} from './LendingVault.sol';
@@ -42,15 +43,15 @@ contract OrderExecutor is OpsReady {
 
     function executeOrder(uint orderNonce) external onlyDedicatedMsgSender {
         // execute order with orderNonce here
-        uint256 amountWithdrawed = lendingVault.withdraw(orderBook.getOrder(orderNonce).tokenIn, orderNonce);
+        uint256 amountWithdrawed = lendingVault.withdraw(orderNonce);
 
         // Approving the appropriate amount that uniswap is gonna take on order to make the swap
-        IERC20(orderBook.getOrder(0).tokenIn).approve(address(swapRouter), amountWithdrawed);
+        ERC4626(orderBook.getOrder(orderNonce).strategyVault).asset().approve(address(swapRouter), amountWithdrawed);
         // Naively set amountOutMinimum to 0. In production, use an oracle or other data source to choose a safer value for amountOutMinimum.
         // We also set the sqrtPriceLimitx96 to be 0 to ensure we swap our exact input amount.
         ISwapRouter.ExactInputSingleParams memory params =
             ISwapRouter.ExactInputSingleParams({
-                tokenIn: orderBook.getOrder(orderNonce).tokenIn,
+                tokenIn: address(ERC4626(orderBook.getOrder(orderNonce).strategyVault).asset()),
                 tokenOut: orderBook.getOrder(orderNonce).tokenOut,
                 fee: 3000, // For this example, we will set the pool fee to 0.3%.
                 recipient: orderBook.getOrder(orderNonce).user,

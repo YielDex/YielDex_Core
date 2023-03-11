@@ -7,44 +7,33 @@ import {AaveV3ERC4626Factory} from "@yield-daddy/src/aave-v3/AaveV3ERC4626Factor
 import {IPoolAddressesProvider} from "@aave-v3-core/contracts/interfaces/IPoolAddressesProvider.sol";
 import {IPool} from "@yield-daddy/src/aave-v3/external/IPool.sol";
 import {IRewardsController} from "@yield-daddy/src/aave-v3/external/IRewardsController.sol";
-import {OrderBook} from "./OrderBook.sol";
+import {OrderBook, OrderDatas} from "./OrderBook.sol";
 
 contract LendingVault {
 
-    AaveV3ERC4626Factory public immutable aaveFactory;
-    IPool public immutable aavePool;
-    IPoolAddressesProvider public immutable aavePoolAddressesProvider;
+    OrderBook public immutable orderBook;
 
-    address public immutable orderBookAddress;
-
-    // In the future, there will be a mapping for each strategies for one asset rather than this one
-    mapping(ERC20 => ERC4626) public erc4626s;
+    // One order nonce gives you -> one amount of shares
     mapping(uint256 => uint256) public orderShares;
-    
-    event Shares(uint256 shares);
 
-    constructor(address _iPoolAddressesProviderAddress, address _temporaryTokenAddress, address _orderBookAddress) {
-        orderBookAddress = _orderBookAddress;
-        aavePoolAddressesProvider = IPoolAddressesProvider(_iPoolAddressesProviderAddress);
-        aavePool = IPool(aavePoolAddressesProvider.getPool());
-        //rewardsController = IRewardsController(aavePoolAddressesProvider.getRewardsController());
-        aaveFactory = new AaveV3ERC4626Factory(aavePool, address(0x0), IRewardsController(address(0x0)));
-
-        // testAsset that we want to include from from start
-        ERC20 underleyingAsset = ERC20(_temporaryTokenAddress);
-        erc4626s[underleyingAsset] = aaveFactory.createERC4626(underleyingAsset);
+    constructor(OrderBook _orderBook) {
+        orderBook = _orderBook;
     }
 
-    function deposit(address tokenAddress, uint256 _amount, uint256 orderNonce) external {
-        ERC20(tokenAddress).approve(address(erc4626s[ERC20(tokenAddress)]), _amount);
-        orderShares[orderNonce] = erc4626s[ERC20(tokenAddress)].deposit(_amount, address(this));
+    function deposit(uint256 orderNonce) external {
+        OrderDatas memory order = orderBook.getOrder(orderNonce); // Get the order
+        ERC4626 _strategyVault = ERC4626(order.strategyVault); // Get the vault
+        _strategyVault.asset().approve(address(_strategyVault), order.amount); // Approve the vault to get the asset
+        orderShares[orderNonce] = _strategyVault.deposit(order.amount, address(this)); // Deposit the asset into the vault
     }
 
-    function withdraw(address tokenAddress, uint256 orderNonce) external returns (uint256) {
-        erc4626s[ERC20(tokenAddress)].approve(address(erc4626s[ERC20(tokenAddress)]), orderShares[orderNonce]);
-        uint256 amount = erc4626s[ERC20(tokenAddress)].redeem(orderShares[orderNonce], address(this), address(this));
-        ERC20(tokenAddress).transfer(OrderBook(orderBookAddress).getExecutorAddress(), amount);
-        return amount;
+    function withdraw(uint256 orderNonce) external returns (uint256) {
+        OrderDatas memory order = orderBook.getOrder(orderNonce); // Get the order
+        ERC4626 _strategyVault = ERC4626(order.strategyVault); // Get the vault
+        _strategyVault.approve(address(_strategyVault), orderShares[orderNonce]); // Approve the vault to get back the shares
+        uint256 amount = _strategyVault.redeem(orderShares[orderNonce], address(this), address(this)); // Redeem the shares
+        _strategyVault.asset().transfer(orderBook.getExecutorAddress(), amount); // Transfer the asset to the executor in order to swap it
+        return amount; // Return the amount of asset withdrawed
     }
 
 }
