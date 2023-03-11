@@ -42,6 +42,9 @@ contract OrderExecutor is OpsReady {
     }
 
     function executeOrder(uint orderNonce) external onlyDedicatedMsgSender {
+        require(orderBook.getOrder(orderNonce).isExecuted == false, "Order already executed."); // check if order is already executed
+        require(orderBook.getOrder(orderNonce).price == price, "Price is not the same as the one in the order."); // double check the price
+
         // execute order with orderNonce here
         uint256 amountWithdrawed = lendingVault.withdraw(orderNonce);
 
