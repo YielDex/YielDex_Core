@@ -7,17 +7,17 @@ import {AaveV3ERC4626Factory} from "@yield-daddy/src/aave-v3/AaveV3ERC4626Factor
 import {IPoolAddressesProvider} from "@aave-v3-core/contracts/interfaces/IPoolAddressesProvider.sol";
 import {IPool} from "@yield-daddy/src/aave-v3/external/IPool.sol";
 import {IRewardsController} from "@yield-daddy/src/aave-v3/external/IRewardsController.sol";
-import {OrderBook, OrderDatas} from "./OrderBook.sol";
+import {IOrderBook, OrderDatas} from "./Interfaces/IOrderBook.sol";
 
 contract LendingVault {
 
-    OrderBook public immutable orderBook;
+    IOrderBook public immutable orderBook;
 
     // One order nonce gives you -> one amount of shares
     mapping(uint256 => uint256) public orderShares;
 
     constructor(address _orderBook) {
-        orderBook = OrderBook(_orderBook);
+        orderBook = IOrderBook(_orderBook);
     }
 
     function deposit(uint256 orderNonce) external {

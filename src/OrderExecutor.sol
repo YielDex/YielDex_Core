@@ -8,7 +8,9 @@ import {ISwapRouter} from "@v3-periphery/interfaces/ISwapRouter.sol";
 import {OrderBook} from "./OrderBook.sol";
 import {LendingVault} from './LendingVault.sol';
 
-contract OrderExecutor is OpsReady {
+import {IOrderExecutor} from './Interfaces/IOrderExecutor.sol';
+
+contract OrderExecutor is OpsReady, IOrderExecutor {
 
     uint public price; // temporary, testing purposes only
     address public deployer;
@@ -16,8 +18,6 @@ contract OrderExecutor is OpsReady {
     OrderBook public orderBook;
     ISwapRouter public immutable swapRouter;
     LendingVault public lendingVault;
-
-    event OrderDone(string, uint256);
 
     modifier onlyDeployer {
         require(msg.sender == deployer, "Not allowed address.");

@@ -14,4 +14,8 @@ interface IOrderExecutor {
 
     function checker(uint orderNonce) external view returns (bool canExec, bytes memory execPayload);
 
+    function price() external view returns (uint);
+
+    function executeOrder(uint orderNonce) external;
+
 }

@@ -5,27 +5,17 @@ import {OpsTaskCreator} from "@gelato/integrations/OpsTaskCreator.sol";
 import {ModuleData, Module} from "@gelato/integrations/Types.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ERC4626} from "@solmate/mixins/ERC4626.sol";
-import {OrderExecutor} from "./OrderExecutor.sol";
+import {IOrderExecutor} from "./Interfaces/IOrderExecutor.sol";
 import {LendingVault} from './LendingVault.sol';
 
-struct OrderDatas {
-    address user;
-    uint256 price;
-    uint256 amount;
-    address strategyVault;
-    address tokenOut;
-    bytes32 orderId;
-    bool isExecuted;
-}
+import {IOrderBook, OrderDatas} from './Interfaces/IOrderBook.sol';
 
-contract OrderBook is OpsTaskCreator {
+contract OrderBook is OpsTaskCreator, IOrderBook {
     mapping (uint => OrderDatas) internal orders; // returns order data
     uint internal orderNonce;
     address internal admin;
-    OrderExecutor internal orderExecutor;
+    IOrderExecutor internal orderExecutor;
     LendingVault internal lendingVault;
-    event construct(string, address);
-    event orderCreated(string, uint256);
 
     modifier onlyAdmin {
         require(msg.sender == admin, "Not allowed address.");
@@ -36,7 +26,7 @@ contract OrderBook is OpsTaskCreator {
         admin = msg.sender;
     }
 
-    function setOrderExecutor(OrderExecutor _orderExecutorAddress) external onlyAdmin {
+    function setOrderExecutor(IOrderExecutor _orderExecutorAddress) external onlyAdmin {
         orderExecutor = _orderExecutorAddress;
     }
 
@@ -46,8 +36,8 @@ contract OrderBook is OpsTaskCreator {
 
     function createOrder(uint price, uint amount, ERC4626 _strategyVault, address _tokenOut) external returns (uint) {
 
-        // The user needs to approve this contract for the appropriate amount
-        _strategyVault.asset().transferFrom(msg.sender, address(this), amount);
+        // The user needs to approve this contract for the appropriate amount, then we transfer the tokens to the lending vault
+        _strategyVault.asset().transferFrom(msg.sender, address(lendingVault), amount);
 
         // The function that will be executed by the executor to execute this specific order
         bytes memory execData = abi.encodeCall(orderExecutor.executeOrder, (orderNonce));
@@ -79,9 +69,7 @@ contract OrderBook is OpsTaskCreator {
         // Save the order data
         orders[orderNonce] = OrderDatas(msg.sender, price, amount, address(_strategyVault), _tokenOut, orderId, false);
 
-        // Transfer tokens to the vault
-        _strategyVault.asset().transfer(address(lendingVault), amount); // approval needed to be able to swap liquidity
-        lendingVault.deposit(orderNonce); // depositing liquidity into the vault
+        lendingVault.deposit(orderNonce); // depositing liquidity into the ERC4626 vault
 
         orderNonce++; // increment the order nonce for the next order
 
@@ -99,12 +87,12 @@ contract OrderBook is OpsTaskCreator {
         orders[_orderNonce].isExecuted = true;
     }
 
-    function getOrder(uint _orderNonce) external view returns (OrderDatas memory) {
-        return orders[_orderNonce];
-    }
-
     function getExecutorAddress() external view returns (address) {
         return address(orderExecutor);
+    }
+
+    function getOrder(uint _orderNonce) external view returns (OrderDatas memory) {
+        return orders[_orderNonce];
     }
 
 }
