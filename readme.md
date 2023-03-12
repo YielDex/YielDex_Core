@@ -5,24 +5,21 @@ Welcome to YielDex protocol! This project enables users to create on-chain EVM s
 ### Use Cases
 
 1. Automate Liquidity Provisioning
-One of the main use cases for our protocol is to automate liquidity provisioning. Users can create custom strategies that will automatically execute trades and move funds between different platforms to optimize their liquidity. For example, a user could set up a strategy to automatically lend their assets on Aave when the yield exceeds a certain threshold, and then withdraw their funds and deposit them into a yield farming pool on a different platform when the yield drops below a certain threshold.
+One of the main use cases for YielDex protocol is to automate liquidity provisioning. Users can create custom strategies that will automatically execute trades and move funds between different platforms to optimize their liquidity. For example, a user could set up a strategy to automatically lend their assets on Aave when the yield exceeds a certain threshold, and then withdraw their funds and deposit them into a yield farming pool on a different platform when the yield drops below a certain threshold. Or you could simply use a Yearn vault!
 
-2. Optimize Yield Aggregation
-Another key use case for our protocol is to optimize yield aggregation. Users can set up strategies that will automatically move their funds between different platforms to maximize their yield. For example, a user could set up a strategy that aggregates liquidity across multiple platforms, such as Aave, Compound, and Curve, and automatically moves their funds to the platform with the highest yield.
-
-3. Risk Management
-Our protocol also enables users to manage their risk exposure. Users can set up strategies that will automatically move their funds between different platforms based on certain risk criteria. For example, a user could set up a strategy to automatically withdraw their funds from a platform if the platform's asset price deviates more than a certain percentage from the peg.
+2. Risk Management
+YielDex protocol also enables users to manage their risk exposure. Users can set up strategies that will automatically move their funds between different platforms based on certain risk criteria. For example, a user could set up a strategy to automatically withdraw their funds from a platform if the platform's asset price deviates more than a certain percentage from the peg.
 (You could choose to stop lending your USTs/USDCs if they depeg more than 2% and swap them to GHO!)
 
-5. ERC4626 Vault Standard
-Our protocol is built on top of the ERC4626 vault standard, which is specifically designed for yield strategies. This means that users can store their liquidity in a secure and standardized way, and easily withdraw or swap their funds when needed. You currently just have to give an ERC4626 address into the order parameter in order that your liquidity goes to it while the order is still pending.
+3. ERC4626 Vault Standard
+YielDex protocol is built on top of the ERC4626 vault standard, which is specifically designed for yield strategies. This means that users can store their liquidity in a secure and standardized way, and easily withdraw or swap their funds when needed. You currently just have to give an ERC4626 address into the order parameter in order that your liquidity goes to it while the order is still pending.
 
-6. Infinite possibilities, for the end-user... and the buidlers!
-We will provide a variety of smart contract components, or "bricks," that end-users can manage using our front-end interface. Developers can also use these bricks directly by deploying compatible contracts with their own parameters. With our protocol, users can choose which protocols to use for liquidity swaps or lending, and can define their own criteria for these actions. The possibilities for customizing your liquidity management strategy are virtually infinite!
+4. Infinite possibilities, for the end-user... and the buidlers!
+We will provide a variety of smart contract components, or "bricks," that end-users can manage using the front-end interface. Developers can also use these bricks directly by deploying compatible contracts with their own parameters. With YielDex protocol, users can choose which protocols to use for liquidity swaps or lending, and can define their own criteria for these actions. The possibilities for customizing your liquidity management strategy are virtually infinite!
 
 ### Conclusion
 
-YielDex protocol provides users with the ability to create highly customized strategies for liquidity optimization. Whether you are looking to automate liquidity provisioning, optimize yield aggregation, manage your risk exposure, or create your own custom strategy, our protocol can help. By leveraging the power of on-chain execution and the ERC4626 vault standard, we provide users with a secure and efficient way to optimize their liquidity.
+YielDex protocol provides users with the ability to create highly customized strategies for liquidity optimization. Whether you are looking to automate liquidity provisioning, optimize yield aggregation, manage your risk exposure, or create your own custom strategy, YielDex protocol can help. By leveraging the power of on-chain execution and the ERC4626 vault standard, we provide users with a secure and efficient way to optimize their liquidity.
 
 ### How to test this project  
 Simple.  
