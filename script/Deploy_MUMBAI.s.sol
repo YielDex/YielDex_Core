@@ -5,6 +5,7 @@ import {Script} from "@forge-std/Script.sol";
 import {OrderBook} from "../src/OrderBook.sol";
 import {OrderExecutor} from "../src/OrderExecutor.sol";
 import {LendingVault} from "../src/LendingVault.sol";
+import {YielDexLiteProxy} from "../src/YielDexLiteProxy.sol";
 
 contract DeployScript is Script {
     //function setUp() public {}
@@ -30,6 +31,12 @@ contract DeployScript is Script {
 
         // Set OrderExecutor's lendingVault
         orderExecutor.setLendingVault(address(lendingVault));
+
+        // Deploy YielDexLiteProxy and set its dependencies
+        YielDexLiteProxy yielDexLiteProxy = new YielDexLiteProxy();
+        yielDexLiteProxy.setOrderBook(address(orderBook));
+        yielDexLiteProxy.setOrderExecutor(address(orderExecutor));
+        yielDexLiteProxy.setLendingVault(address(lendingVault));
 
         vm.stopBroadcast();
     }
