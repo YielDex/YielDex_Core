@@ -9,19 +9,36 @@ In the current implementation, you can create on-chain limit orders that are exe
 Once the order execution condition is reached, your liquidity is retrieved from the vault, swapped, and sent back to the user in the same block.
 
 - **What are the uses cases of the current implementation:**  
-    1. Trade while your liquidity is working: Traders can create limit orders that automatically execute when certain market conditions are met. By putting their liquidity to work on a chosen `ERC2626` vault while the order is pending, traders can earn additional yield on their funds until the order is executed.  
+    1. **Trade while your liquidity is working:**  
+    Traders can create limit orders that automatically execute when certain market conditions are met. By putting their liquidity to work on a chosen `ERC2626` vault while the order is pending, traders can earn additional yield on their funds until the order is executed.  
 
-    2. Automate Liquidity Provisioning: Users can provide liquidity using an `ERC4626` vault for their strategy and create limit orders that are executed when certain price levels are reached. This can help maintain the liquidity into the strategy until the price of the underleying asset reach certain condition (ex: `USDC` depeg).  
+    2. **Hedge yourself while lending your liquidity:**  
+    Users can provide liquidity using an `ERC4626` vault for their strategy and create limit orders that are executed when certain price levels are reached. This can help maintain the liquidity into the strategy until the price of the underleying asset reach certain condition (ex: You could choose to stop lending your `USDC`s if they depeg more than 2% and swap them to `GHO`!).  
 
-
+**ERC4626 Vault Standard**  
+**YielDex** protocol is built on top of the `ERC4626` vault standard, which is specifically designed for yield strategies. This means that users can store their liquidity in a secure and standardized way, and easily withdraw or swap their funds when needed. You currently just have to give an `ERC4626` address into the order parameter in order that your liquidity goes to it while the order is still pending.
 ### **Futur use cases**
 
 1. **Risk Management**  
-**YielDex** protocol also enables users to manage their risk exposure. Users can set up strategies that will automatically move their funds between different platforms based on certain risk criteria. For example, a user could set up a strategy to automatically withdraw their funds from a platform if the platform's asset price deviates more than a certain percentage from the peg.
-(You could choose to stop lending your `UST`s/`USDC`s if they depeg more than 2% and swap them to `GHO`!)
+**YielDex** protocol enables users to manage their risk exposure. Users can set up strategies that will automatically move their funds between different platforms based on certain risk criteria. For example, a user could set up a strategy to automatically withdraw their funds from a platform if the platform's reward token price deviates more than a certain percentage (it could be any conditions).
 
-2. **ERC4626 Vault Standard**  
-**YielDex** protocol is built on top of the `ERC4626` vault standard, which is specifically designed for yield strategies. This means that users can store their liquidity in a secure and standardized way, and easily withdraw or swap their funds when needed. You currently just have to give an `ERC4626` address into the order parameter in order that your liquidity goes to it while the order is still pending.
+
+2. **Advanced trading startegies**  
+With the current features of **YielDex** protocol, users can already create on-chain limit orders that are executed on-chain, while their liquidity is working on the chosen `ERC4626` vault. However, there are some additional advanced trading strategies that can be implemented to enhance the optimization of liquidity, such as:
+
+    - **Order criteria based on another asset:**  
+    Users can base their order criteria on another asset, which means that they can create an order to buy an asset at the market price only if the price of another asset meets a certain condition. For example, a user might want to buy `ETH` with their stablecoins but knows that `ETH`'s price is currently dependent on `Bitcoin`'s price. So, they can create an order to buy `ETH` only if the price of `Bitcoin` goes down, which could help them get a better price for `ETH`.  
+
+    - **Multiple order criteria:**
+    Users can create multiple order criteria to validate their decision to buy an asset. For example, they might want to buy an asset only if both the price of `Bitcoin` and the price of another stablecoin meet certain conditions. This can help them avoid making a mistake due to a single price fluctuation. We could also add some oracles here if you the users need to have special indicators (like `RSI` of an asset).
+
+    - **List of assets to buy:**  
+    Users can create a list of assets to buy, and the first asset that meets the condition will be the one that is bought. For example, a user might want to buy `ETH` at $900, but they are also willing to buy `BTC` at $14,000 instead if `ETH`'s price does not meet the condition.  
+
+    - **Opening spot orders on behalf of someone else:**  
+    **YielDex** protocol could be very easily extended to allow the opening of spot orders on behalf of someone else. For example, if a user is an on-chain copy trading protocol, other users could send them some liquidity, and they could use it to open orders on their behalf.  
+
+    These advanced trading strategies can help users optimize their liquidity even further and create highly customized strategies for their specific needs. With the **YielDex** protocol's ability to execute on-chain orders, users can take advantage of the security and efficiency of the `ERC4626` vault standard to manage their liquidity.  
 
 3. **Infinite possibilities, for the end-user... and the buidlers!**  
 We will provide a variety of smart contract components, or "bricks," that end-users can manage using the front-end interface. Developers can also use these bricks directly by deploying compatible contracts with their own parameters. With `YielDex` protocol, users can choose which protocols to use for liquidity swaps or lending, and can define their own criteria for these actions. The possibilities for customizing your liquidity management strategy are virtually infinite!
