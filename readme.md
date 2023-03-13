@@ -15,7 +15,7 @@ Once the order execution condition is reached, your liquidity is retrieved from 
     2. **Hedge yourself while lending your liquidity:**  
     Users can provide liquidity using an `ERC4626` vault for their strategy and create limit orders that are executed when certain price levels are reached. This can help maintain the liquidity into the strategy until the price of the underleying asset reach certain condition(s) (ex: You could choose to stop lending your `USDC`s if they depeg more than 2% and swap them to `GHO`!).  
 
-**ERC4626 Vault Standard**  
+***ERC4626 Vault Standard***  
 **YielDex** protocol is built on top of the `ERC4626` vault standard, which is specifically designed for yield strategies. This means that users can store their liquidity in a secure and standardized way, and easily withdraw or swap their funds when needed. You currently just have to give an `ERC4626` address into the order parameter in order that your liquidity goes to it while the order is still pending.
 ### **Futur use cases**
 
